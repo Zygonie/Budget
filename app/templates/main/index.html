@@ -1,0 +1,10 @@
+{% extends "layout.html" %}
+
+{% block page_content %}
+
+<div class="text-center vertical-center hello">
+    <h1>Hello World!</h1>
+    <h2><a href="{{ url_for('main.list_operations') }}">Operations</a></h2>
+</div>
+
+{% endblock %}

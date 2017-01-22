@@ -1,0 +1,14 @@
+{% extends "layout.html" %}
+
+{% block page_content %}
+
+<div class="text-center vertical-center hello">
+    <h1>List of Operations</h1>
+    <ul>
+        {% for operation in operations %}
+        <li>{{ operation }}</li>
+        {% endfor %}
+    </ul>
+</div>
+
+{% endblock %}

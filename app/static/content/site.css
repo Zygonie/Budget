@@ -1,0 +1,143 @@
+﻿body {
+    padding-top: 50px;
+    padding-bottom: 20px;
+}
+
+/* Set padding to keep content from hitting the edges */
+.body-content {
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+/* styles for validation helpers */
+.field-validation-error {
+    color: #b94a48;
+}
+
+.field-validation-valid {
+    display: none;
+}
+
+input.input-validation-error {
+    border: 1px solid #b94a48;
+}
+
+input[type="checkbox"].input-validation-error {
+    border: 0 none;
+}
+
+.validation-summary-errors {
+    color: #b94a48;
+}
+
+.validation-summary-valid {
+    display: none;
+}
+
+.navbar-inverse .navbar-brand,
+.navbar-inverse .navbar-nav > li > a {
+    color: AppWorkspace;
+}
+
+.btn-login {
+    border: none;
+    border-radius: 0;
+    padding-bottom: 15px;
+    padding-top: 15px;
+}
+
+.btn-login:hover {
+    background: rgb(65, 165, 200) !important;
+}
+
+.btn-logout {
+    border: none;
+    border-radius: 0;
+    padding-bottom: 15px;
+    padding-top: 15px;
+}
+
+.btn-logout:hover {
+    background: #D94F75 !important;
+}
+
+.navbar {
+    margin-bottom: 0;
+}
+
+.navbar-inverse .navbar-nav > li > a:hover {
+    background-color: #555555;
+}
+
+footer {
+    position: fixed;
+    bottom: 0;
+    padding: 10px 50px;
+    height: 50px;
+    background: #222;
+    color: AppWorkspace;
+    width: 100%;
+}
+
+/***************/
+/* Chart Style */
+/***************/
+.axis path,
+.axis line {
+    fill: none;
+    stroke: #000;
+    shape-rendering: crispEdges;
+}
+
+.axis text {
+    font-family: sans-serif;
+    font-size: 11px;
+}
+
+.x.axis path {
+    display: none;
+}
+
+.line {
+    fill: none;
+    stroke: steelblue;
+    stroke-width: 1.5px;
+}
+
+.login-border {
+    box-shadow: 1px 2px 4px 0 rgba(0,0,0,0.16),0 2px 10px 0 rgba(0,0,0,0.12);
+    background-color: #FBFBFB;
+}
+
+.center-flex {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: auto;
+    top: 50px;
+    bottom: 50px;
+    left: 0;
+    right: 0;
+    position: absolute;
+    width: 100%;
+    height: auto;
+}
+
+.login-form-wrapper {
+    margin-top: 30px;
+}
+
+.login-form-btn {
+    width: 100px;
+}
+
+.vertical-center {
+    display: flex; /* contexte sur le parent */
+    flex-direction: column; /* direction d'affichage verticale */
+    justify-content: center; /* alignement vertical */
+}
+
+.hello {
+    height: 300px;
+}
