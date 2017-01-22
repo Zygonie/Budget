@@ -1,4 +1,5 @@
 import unittest
+from flask import url_for
 from app import create_app, db
 from app.models import User, Role, Operation, Year, Day
 
@@ -21,7 +22,9 @@ class FlaskClientTestCase(unittest.TestCase):
 
     def test_home_page(self):
         response = self.client.get(url_for('main.index'))
-        self.assertTrue('Stranger' in response.get_data(as_text=True))
+        # Get the HTML content as text
+        response_txt = response.get_data(as_text=True)
+        self.assertTrue('Stranger' in response_txt)
 
     def test_operation_list(self):
         # response = self.client.get(url_for('main.list_operations'))

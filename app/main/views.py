@@ -26,5 +26,5 @@ def list_operations():
     operations = Operation.query.all()
     if operations is None:
         return redirect(url_for('index'))
-    return render_template('operation_list.html',
+    return render_template('main/operation_list.html',
                            operations=operations)

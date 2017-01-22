@@ -7,6 +7,9 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 class Config:
     SECRET_KEY = os.environ.get('SECRET_KEY') or 'hard to guess string'
     SQLALCHEMY_COMMIT_ON_TEARDOWN = True
+    # SQLALCHEMY_TRACK_MODIFICATIONS adds significant overhead and will be disabled by default in the future.
+    # Set it to True to suppress this warning.
+    SQLALCHEMY_TRACK_MODIFICATIONS = True
     
     @staticmethod
     def init_app(app):
@@ -31,8 +34,8 @@ class ProductionConfig(Config):
 
 
 config = {
-'development': DevelopmentConfig,
-'testing': TestingConfig,
-'production': ProductionConfig,
-'default': DevelopmentConfig
+    'development': DevelopmentConfig,
+    'testing': TestingConfig,
+    'production': ProductionConfig,
+    'default': DevelopmentConfig
 }

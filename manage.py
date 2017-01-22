@@ -4,6 +4,7 @@ from app import create_app, db
 from app.models import User, Role
 from flask_script import Manager, Shell
 from flask_migrate import Migrate, MigrateCommand
+from app.models import Account, Day, Operation, Year
 
 app = create_app(os.getenv('FLASK_CONFIG') or 'default')
 manager = Manager(app)
@@ -22,6 +23,16 @@ def test():
     import unittest
     tests = unittest.TestLoader().discover('tests')
     unittest.TextTestRunner(verbosity=2).run(tests)
+
+
+@manager.command
+def seed():
+    db.session.remove()
+    db.drop_all()
+    db.create_all()
+    Year.insert_year()
+    Day.insert_day()
+    Operation.insert_operations()
 
 
 if __name__ == '__main__':

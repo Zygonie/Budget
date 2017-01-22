@@ -63,7 +63,7 @@ class Day(db.Model):
         year = Year.query.filter_by(year=current_day.year).first()
         if day is None and year is not None:
             day = Day()
-            day.date = current_day
+            day.date = current_day.date()
             day.value = 20
             day.year_id = year.id
             db.session.add(day)
@@ -104,17 +104,17 @@ class Operation(db.Model):
                     'frequency': 2
                 }
         ]
-        day = Day.query.filter_by(date=current).first()
+        day = Day.query.filter_by(date=current.date()).first()
         for o in ops:
-            op = Operation.query.filter_by(descr=o).first()
+            op = Operation.query.filter_by(descr=o['descr']).first()
             if op is None:
                 op = Operation(descr=o)
-            op.descr = o['descr']
-            op.date = current
-            op.day_id = day.id
-            op.value = o['value']
-            op.frequency = o['frequency']
-            db.session.add(op)
+                op.descr = o['descr']
+                op.date = current
+                op.day_id = day.id
+                op.value = o['value']
+                op.frequency = o['frequency']
+                db.session.add(op)
         db.session.commit()
 
 
@@ -122,6 +122,7 @@ class Account(db.Model):
     __tablename__ = 'accounts'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(64), unique=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
 
     def __repr__(self):
         return '<Account %r>' % self.name
