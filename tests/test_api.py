@@ -1,3 +1,4 @@
+import json
 from flask import url_for
 from flask_testing import TestCase
 from app import create_app, db
@@ -29,15 +30,15 @@ class FlaskClientTestCase(TestCase):
     @classmethod
     def tearDownClass(cls):
         db.session.remove()
-        # db.drop_all()
+        db.drop_all()
         cls.app_context.pop()
 
-    def test_home_page(self):
-        response = self.client.get(url_for('main.index'))
-        # Get the HTML content as text
-        response_txt = response.get_data(as_text=True)
-        self.assertTrue('<title>Home</title>' in response_txt)
-
-    def test_operation_list(self):
-        # response = self.client.get(url_for('main.list_operations'))
-        self.assertTrue(True)
+    def test_get_operations(self):
+        response = self.client.get(url_for('api.get_operations'))
+        # Get the JSON
+        json_response = json.loads(response.get_data())
+        self.assertTrue(len(json_response['operations']) > 0)
+        first_operation = json_response['operations'][0]
+        self.assertEqual(first_operation['descr'], 'operation 1')
+        self.assertEqual(first_operation['frequency'], 1)
+        self.assertEqual(first_operation['value'], 1)

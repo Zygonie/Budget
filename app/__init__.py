@@ -5,7 +5,9 @@ The flask application package.
 from flask import Flask, render_template
 from flask_bootstrap import Bootstrap
 from flask_sqlalchemy import SQLAlchemy
+from flask.json import JSONEncoder
 from config import config
+from datetime import date
 from os import environ
 
 bootstrap = Bootstrap()
@@ -22,6 +24,24 @@ def create_app(config_name):
 
     # Register blueprint(s)
     from main import main_blueprint
+    from api_1_0 import api_blueprint as api_1_0_blueprint
     app.register_blueprint(main_blueprint)
+    app.register_blueprint(api_1_0_blueprint, url_prefix='/api/v1.0')
+
+    app.json_encoder = CustomJSONEncoder
 
     return app
+
+
+class CustomJSONEncoder(JSONEncoder):
+    def default(self, obj):
+        try:
+            if isinstance(obj, date):
+                return obj.isoformat()
+            iterable = iter(obj)
+        except TypeError:
+            pass
+        else:
+            return list(iterable)
+        return JSONEncoder.default(self, obj)
+
