@@ -1,4 +1,5 @@
 import json
+from datetime import date
 from flask import url_for
 from flask_testing import TestCase
 from app import create_app, db
@@ -42,3 +43,21 @@ class FlaskClientTestCase(TestCase):
         self.assertEqual(first_operation['descr'], 'operation 1')
         self.assertEqual(first_operation['frequency'], 1)
         self.assertEqual(first_operation['value'], 1)
+
+    def test_post_new_operation(self):
+        response = self.client.get(url_for('api.get_accounts'))
+        json_account = json.loads(response.get_data())
+        self.assertGreaterEqual(len(json_account['accounts']), 1, 'No account in the database')
+        account_id = json_account['accounts'][0]['id']
+        operation = {
+            'descr': 'New operation',
+            'date': date.today(),
+            'value': 123,
+            'frequency': 1,
+            'start_date': '',
+            'end_date': '',
+            'account_id': account_id
+        }
+        response = self.client.post(url_for('api.new_operation'),
+                                    data=json.dumps(operation))
+        self.assertEqual(response['descr'], operation['descr'])
