@@ -1,11 +1,14 @@
 from app import db
 from flask import url_for
 from datetime import date
+from app.exceptions import ValidationError
+
 
 user_role_relationship_table = db.Table('user_role_relationship_table',
                                         db.Column('role_id', db.Integer, db.ForeignKey('roles.id'), nullable=False),
                                         db.Column('user_id', db.Integer, db.ForeignKey('users.id'), nullable=False),
                                         db.PrimaryKeyConstraint('role_id', 'user_id'))
+
 
 class Role(db.Model):
     __tablename__ = 'roles'
@@ -146,6 +149,7 @@ class Operation(db.Model):
 
     def to_json(self):
         json_operation = {
+            'id': self.id,
             'descr': self.descr,
             'date': self.date,
             'value': self.value,
@@ -155,6 +159,34 @@ class Operation(db.Model):
             'account_id': url_for('api.get_account', id=self.account_id, _external=True)
         }
         return json_operation
+
+    @staticmethod
+    def from_json(json_obj):
+        descr = json_obj.get('desc')
+        date = json_obj.get('date')
+        value = json_obj.get('value')
+        frequency = json_obj.get('frequency')
+        start_date = json_obj.get('start_date')
+        end_date = json_obj.get('end_date')
+        account_id = json_obj.get('account_id')
+        if descr is None or descr == '':
+            raise ValidationError('Wrong operation description')
+        if date is None or date == '':
+            raise ValidationError('Wrong operation date')
+        if value is None or value == '':
+            raise ValidationError('Wrong operation value')
+        if frequency is None or frequency == '':
+            raise ValidationError('Wrong operation frequency')
+        if frequency > 1:
+            if start_date is None or start_date == '':
+                raise ValidationError('Wrong operation start date')
+            if end_date is None or end_date == '':
+                raise ValidationError('Wrong operation end date')
+        if account_id is None or account_id == '':
+            raise ValidationError('Wrong account id')
+        return Operation(descr=descr, date=date, value=value, frequency=frequency,
+                         start_date=start_date, end_date=end_date, account_id=account_id)
+
 
 class Account(db.Model):
     __tablename__ = 'accounts'
@@ -177,3 +209,11 @@ class Account(db.Model):
             account.user_id = user.id
             db.session.add(account)
             db.session.commit()
+
+    def to_json(self):
+        json_account = {
+            'id': self.id,
+            'name': self.name,
+            'user_id': self.user_id
+        }
+        return json_account
