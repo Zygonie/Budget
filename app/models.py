@@ -1,5 +1,6 @@
 from app import db
 from flask import url_for
+from werkzeug.http import parse_date
 from datetime import date
 from app.exceptions import ValidationError
 
@@ -162,30 +163,38 @@ class Operation(db.Model):
 
     @staticmethod
     def from_json(json_obj):
-        descr = json_obj.get('desc')
-        date = json_obj.get('date')
-        value = json_obj.get('value')
-        frequency = json_obj.get('frequency')
-        start_date = json_obj.get('start_date')
-        end_date = json_obj.get('end_date')
-        account_id = json_obj.get('account_id')
-        if descr is None or descr == '':
+        _descr = json_obj.get('descr')
+        _date = json_obj.get('date')
+        _value = json_obj.get('value')
+        _frequency = json_obj.get('frequency')
+        _start_date = json_obj.get('start_date')
+        _end_date = json_obj.get('end_date')
+        _account_id = json_obj.get('account_id')
+        if _descr is None or _descr == '':
             raise ValidationError('Wrong operation description')
-        if date is None or date == '':
+        if _date is None or _date == '':
             raise ValidationError('Wrong operation date')
-        if value is None or value == '':
+        else:
+            _tmp = parse_date(_date)
+            _date = date(_tmp.year, _tmp.month, _tmp.day)
+        if _value is None or _value == '':
             raise ValidationError('Wrong operation value')
-        if frequency is None or frequency == '':
+        if _frequency is None or _frequency == '':
             raise ValidationError('Wrong operation frequency')
-        if frequency > 1:
-            if start_date is None or start_date == '':
+        if _frequency > 1:
+            if _start_date is None or _start_date == '':
                 raise ValidationError('Wrong operation start date')
-            if end_date is None or end_date == '':
+            if _end_date is None or _end_date == '':
                 raise ValidationError('Wrong operation end date')
-        if account_id is None or account_id == '':
+        else:
+            if _start_date  == '':
+                _start_date = None
+            if _end_date == '':
+                _end_date = None
+        if _account_id is None or _account_id == '':
             raise ValidationError('Wrong account id')
-        return Operation(descr=descr, date=date, value=value, frequency=frequency,
-                         start_date=start_date, end_date=end_date, account_id=account_id)
+        return Operation(descr=_descr, date=_date, value=_value, frequency=_frequency,
+                         start_date=_start_date, end_date=_end_date, account_id=_account_id)
 
 
 class Account(db.Model):

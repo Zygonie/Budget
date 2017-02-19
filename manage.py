@@ -1,10 +1,9 @@
 #!/usr/bin/env python
 import os
-from app import create_app, db
-from app.models import User, Role
+from app import create_app, db, seed
 from flask_script import Manager, Shell
 from flask_migrate import Migrate, MigrateCommand
-from app.models import Account, Day, Operation, Year
+from app.models import Account, Day, Operation, Year, User, Role
 
 app = create_app(os.getenv('FLASK_CONFIG') or 'default')
 manager = Manager(app)
@@ -27,12 +26,7 @@ def test():
 
 @manager.command
 def seed():
-    db.session.remove()
-    db.drop_all()
-    db.create_all()
-    Year.insert_year()
-    Day.insert_day()
-    Operation.insert_operations()
+    seed.seed()
 
 
 if __name__ == '__main__':

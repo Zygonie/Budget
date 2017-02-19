@@ -1,9 +1,8 @@
-import json
+import flask.json as json
 from datetime import date
 from flask import url_for
 from flask_testing import TestCase
-from app import create_app, db
-from app.models import User, Role, Operation, Year, Day, Account
+from app import create_app, db, seed
 
 
 class FlaskClientTestCase(TestCase):
@@ -18,21 +17,28 @@ class FlaskClientTestCase(TestCase):
         cls.app = cls.create_app()
         cls.app_context = cls.app.app_context()
         cls.app_context.push()
-        db.drop_all()
-        db.create_all()
-        Role.insert_role()
-        User.insert_users()
-        Account.insert_account()
-        Year.insert_year()
-        Day.insert_day()
-        Operation.insert_operations()
-        cls.client = cls.app.test_client(use_cookies=True)
+        seed.seed()
+        # db.drop_all()
+        # db.create_all()
+        # Role.insert_role()
+        # User.insert_users()
+        # Account.insert_account()
+        # Year.insert_year()
+        # Day.insert_day()
+        # Operation.insert_operations()
+        cls.client = cls.app.test_client()
 
     @classmethod
     def tearDownClass(cls):
         db.session.remove()
         db.drop_all()
         cls.app_context.pop()
+
+    def get_api_headers(self):
+        return {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        }
 
     def test_get_operations(self):
         response = self.client.get(url_for('api.get_operations'))
@@ -59,5 +65,7 @@ class FlaskClientTestCase(TestCase):
             'account_id': account_id
         }
         response = self.client.post(url_for('api.new_operation'),
+                                    headers=self.get_api_headers(),
                                     data=json.dumps(operation))
-        self.assertEqual(response['descr'], operation['descr'])
+        json_response = json.loads(response.data.decode('utf-8'))
+        self.assertEqual(json_response['descr'], operation['descr'])

@@ -24,11 +24,11 @@ def create_app(config_name):
 
     # Register blueprint(s)
     from main import main_blueprint
-    from api_1_0 import api_blueprint as api_1_0_blueprint
+    from api_1_0 import api_blueprint
     app.register_blueprint(main_blueprint)
-    app.register_blueprint(api_1_0_blueprint, url_prefix='/api/v1.0')
+    app.register_blueprint(api_blueprint, url_prefix='/api/v1.0')
 
-    app.json_encoder = CustomJSONEncoder
+    # app.json_encoder = CustomJSONEncoder
 
     return app
 
